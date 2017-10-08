@@ -36,21 +36,35 @@ namespace VulcanWebAPI.Controllers
 
             // full path to file in temp location
 
-            foreach (var formFile in files)
+            if (files.Count > 0)
             {
-                if (formFile.Length > 0)
+                foreach (var formFile in files)
                 {
-                    var filePath = Path.Combine(webDatasRoot, formFile.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    if (formFile.Length > 0)
                     {
-                        await formFile.CopyToAsync(stream);
+                        var filePath = Path.Combine(webDatasRoot, formFile.FileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+
+                        fooAPIResult.Success = true;
+                        fooAPIResult.Message = "檔案上傳成功";
+                        fooAPIResult.Payload = new APIData
+                        {
+                            Id = 3000,
+                            Name = "Your Name",
+                            Filename = formFile.FileName
+                        };
                     }
                 }
             }
-
-            fooAPIResult.Success = false;
-            fooAPIResult.Message = "沒有任何檔案上傳";
-            fooAPIResult.Payload = null;
+            else
+            {
+                fooAPIResult.Success = false;
+                fooAPIResult.Message = "沒有任何檔案上傳";
+                fooAPIResult.Payload = null;
+            }
 
             return fooAPIResult;
         }
