@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{17040BE6-41C6-4E2E-9888-D8D881A481C8}</ProjectGuid>
+    <ProjectGuid>{7C143DD7-3A5F-4F4C-9FF2-1893B41C486B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>UploadFile</RootNamespace>
-    <AssemblyName>UploadFile</AssemblyName>
+    <RootNamespace>DownloadImage</RootNamespace>
+    <AssemblyName>DownloadImage</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -52,11 +52,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="vulcan.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">

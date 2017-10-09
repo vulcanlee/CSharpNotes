@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace VulcanWebAPI.Models
+namespace DataModel
 {
     /// <summary>
     /// 呼叫 API 回傳的制式格式
