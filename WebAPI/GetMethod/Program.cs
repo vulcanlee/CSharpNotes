@@ -16,7 +16,7 @@ namespace GetMethod
         static void Main(string[] args)
         {
             var foo = JsonPutAsync().Result;
-            Console.WriteLine($"使用 Delete 方法呼叫 Web API 的結果");
+            Console.WriteLine($"使用 Get 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
             var fooAPIData = JsonConvert.DeserializeObject<List<APIData>>(foo.Payload.ToString());
