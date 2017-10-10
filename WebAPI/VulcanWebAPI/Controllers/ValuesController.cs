@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DataModel;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VulcanWebAPI.Controllers
 {
@@ -65,7 +69,7 @@ namespace VulcanWebAPI.Controllers
             }
             return foo;
         }
-        
+
         // http://vulcanwebapi.azurewebsites.net/api/values/777
         [HttpGet("{id}")]
         public APIResult Get(int id)
@@ -203,7 +207,7 @@ namespace VulcanWebAPI.Controllers
             }
             return foo;
         }
-    
+
         // http://vulcanwebapi.azurewebsites.net/api/values/HeaderPost
         [HttpPost("HeaderPost")]
         public APIResult HeaderGet([FromBody]LoginInformation loginInformation)
@@ -255,6 +259,105 @@ namespace VulcanWebAPI.Controllers
                     }
                 }
             }
+            return foo;
+        }
+
+        [HttpPost("Login")]
+        public async Task<APIResult> Login([FromBody]LoginInformation loginInformation)
+        {
+            APIResult foo;
+
+            if (loginInformation.Account == "Vulcan" &&
+                loginInformation.Password == "123")
+            {
+                var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Name, "Herry"),
+                new Claim(ClaimTypes.Role, "Users")
+            };
+                var claimsIdentity = new ClaimsIdentity(claims, "myTest");
+                var principal = new ClaimsPrincipal(claimsIdentity);
+                try
+                {
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal,
+                        new AuthenticationProperties
+                        {
+                            ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                            IsPersistent = true,
+                            AllowRefresh = true
+                        });
+                    foo = new APIResult()
+                    {
+                        Success = true,
+                        Message = "這個帳號與密碼正確無誤",
+                        Payload = null
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    foo = new APIResult()
+                    {
+                        Success = false,
+                        Message = "這個帳號與密碼不正確",
+                        Payload = null
+                    };
+                }
+            }
+            else
+            {
+                foo = new APIResult()
+                {
+                    Success = false,
+                    Message = "這個帳號與密碼不正確",
+                    Payload = null
+                };
+            }
+
+            return foo;
+        }
+
+        [Authorize]
+        [HttpGet("LoginCheck")]
+        public APIResult LoginCheck()
+        {
+            APIResult foo = new APIResult()
+            {
+                Success = true,
+                Message = "成功得所有資料集合",
+                Payload = new List<APIData>()
+                {
+                    new APIData()
+                    {
+                        Id =777,
+                        Name = "Vulcan01"
+                    },
+                    new APIData()
+                    {
+                        Id =234,
+                        Name ="Vulcan02"
+                    }
+                }
+            };
+            return foo;
+        }
+
+        [HttpGet("LongTimeGet")]
+        public async Task<APIResult> LongTimeGet()
+        {
+            APIResult foo;
+
+            await Task.Delay(5000);
+            foo = new APIResult()
+            {
+                Success = true,
+                Message = "透過 Get 方法",
+                Payload = new APIData()
+                {
+                    Id = 777,
+                    Name = "Vulcan01"
+                }
+            };
             return foo;
         }
 

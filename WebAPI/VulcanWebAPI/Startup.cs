@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace VulcanWebAPI
 {
@@ -24,6 +26,13 @@ namespace VulcanWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                       options =>
+                       {
+                           options.LoginPath = new PathString("/auth/login");
+                           options.AccessDeniedPath = new PathString("/auth/denied");
+                       });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +43,7 @@ namespace VulcanWebAPI
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

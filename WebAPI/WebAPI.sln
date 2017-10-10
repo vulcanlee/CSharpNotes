@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetMethod", "GetMethod\GetM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadProgress", "DownloadProgress\DownloadProgress.csproj", "{A4DD1C98-C29A-4379-93E8-ACCE566393B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookiePost", "CookiePost\CookiePost.csproj", "{96DC98A4-A0D4-4A77-8EAA-35A1F5D49C59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongTimeAccess", "LongTimeAccess\LongTimeAccess.csproj", "{0FCC2DC7-965E-47C3-84D5-700C988D5379}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{A4DD1C98-C29A-4379-93E8-ACCE566393B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4DD1C98-C29A-4379-93E8-ACCE566393B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4DD1C98-C29A-4379-93E8-ACCE566393B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96DC98A4-A0D4-4A77-8EAA-35A1F5D49C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96DC98A4-A0D4-4A77-8EAA-35A1F5D49C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96DC98A4-A0D4-4A77-8EAA-35A1F5D49C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96DC98A4-A0D4-4A77-8EAA-35A1F5D49C59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FCC2DC7-965E-47C3-84D5-700C988D5379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FCC2DC7-965E-47C3-84D5-700C988D5379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FCC2DC7-965E-47C3-84D5-700C988D5379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FCC2DC7-965E-47C3-84D5-700C988D5379}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
