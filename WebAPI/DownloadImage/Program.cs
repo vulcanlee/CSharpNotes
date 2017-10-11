@@ -50,7 +50,6 @@ namespace DownloadImage
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}{filename}";
-                        client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
 
                         response = await client.GetAsync(fooFullUrl);
                         #endregion
@@ -59,34 +58,30 @@ namespace DownloadImage
                         #region 處理呼叫完成 Web API 之後的回報結果
                         if (response != null)
                         {
-                            switch (response.StatusCode)
+                            if (response.IsSuccessStatusCode == true)
                             {
-                                case HttpStatusCode.OK:
-                                    #region 狀態碼為 OK
-                                    using (var filestream = File.Open(ImgFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                                using (var filestream = File.Open(ImgFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                                {
+                                    using (var stream = await response.Content.ReadAsStreamAsync())
                                     {
-                                        using (var stream = await response.Content.ReadAsStreamAsync())
-                                        {
-                                            stream.CopyTo(filestream);
-                                        }
+                                        stream.CopyTo(filestream);
                                     }
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = true,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = ImgFilePath,
-                                    };
-                                    #endregion
-                                    break;
-
-                                default:
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = false,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = null,
-                                    };
-                                    break;
+                                }
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = true,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
+                                    Payload = ImgFilePath,
+                                };
+                            }
+                            else
+                            {
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = false,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                    Payload = null,
+                                };
                             }
                         }
                         else

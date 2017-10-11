@@ -79,7 +79,6 @@ namespace DownloadProgress
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}{filename}";
-                        client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
 
                         response = await client.GetAsync(fooFullUrl, 
                             HttpCompletionOption.ResponseHeadersRead);
@@ -89,63 +88,61 @@ namespace DownloadProgress
                         #region 處理呼叫完成 Web API 之後的回報結果
                         if (response != null)
                         {
-                            switch (response.StatusCode)
+                            if (response.IsSuccessStatusCode == true)
                             {
-                                case HttpStatusCode.OK:
-                                    #region 狀態碼為 OK
-                                    var total = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
-                                    var canReportProgress = total != -1 && progress != null;
-                                    using (var filestream = File.Open(ImgFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                                #region 狀態碼為 OK
+                                var total = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
+                                var canReportProgress = total != -1 && progress != null;
+                                using (var filestream = File.Open(ImgFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                                {
+                                    using (var stream = await response.Content.ReadAsStreamAsync())
                                     {
-                                        using (var stream = await response.Content.ReadAsStreamAsync())
+                                        var totalRead = 0L;
+                                        var buffer = new byte[4096];
+                                        var isMoreToRead = true;
+
+                                        do
                                         {
-                                            var totalRead = 0L;
-                                            var buffer = new byte[4096];
-                                            var isMoreToRead = true;
+                                            token.ThrowIfCancellationRequested();
 
-                                            do
+                                            var read = await stream.ReadAsync(buffer, 0, buffer.Length);
+
+                                            if (read == 0)
                                             {
-                                                token.ThrowIfCancellationRequested();
+                                                isMoreToRead = false;
+                                            }
+                                            else
+                                            {
+                                                await filestream.WriteAsync(buffer, 0, read);
 
-                                                var read = await stream.ReadAsync(buffer, 0, buffer.Length);
+                                                totalRead += read;
 
-                                                if (read == 0)
+                                                if (canReportProgress)
                                                 {
-                                                    isMoreToRead = false;
+                                                    progress.Report((totalRead * 1d) / (total * 1d) * 100);
                                                 }
-                                                else
-                                                {
-                                                    await filestream.WriteAsync(buffer, 0, read);
-
-                                                    totalRead += read;
-
-                                                    if (canReportProgress)
-                                                    {
-                                                        progress.Report((totalRead * 1d) / (total * 1d) * 100);
-                                                    }
-                                                }
-                                                // 故意暫停，讓使用者可以取消下載
-                                                await Task.Delay(200);
-                                            } while (isMoreToRead);
-                                        }
+                                            }
+                                            // 故意暫停，讓使用者可以取消下載
+                                            await Task.Delay(200);
+                                        } while (isMoreToRead);
                                     }
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = true,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = ImgFilePath,
-                                    };
-                                    #endregion
-                                    break;
-
-                                default:
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = false,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = null,
-                                    };
-                                    break;
+                                }
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = true,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
+                                    Payload = ImgFilePath,
+                                };
+                                #endregion
+                            }
+                            else
+                            {
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = false,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                    Payload = null,
+                                };
                             }
                         }
                         else

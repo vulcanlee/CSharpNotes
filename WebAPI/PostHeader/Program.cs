@@ -102,7 +102,13 @@ namespace PostHeader
                         {
                             client.DefaultRequestHeaders.Add("VerifyCode", loginInformation.VerifyCode);
                         }
+
+                        // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
+                        //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        // Content-Type 用於宣告遞送給對方的文件型態
+                        //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         var fooJSON = JsonConvert.SerializeObject(loginInformation);
                         using (var fooContent = new StringContent(fooJSON, Encoding.UTF8, "application/json"))
@@ -115,25 +121,20 @@ namespace PostHeader
                         #region 處理呼叫完成 Web API 之後的回報結果
                         if (response != null)
                         {
-                            // 取得呼叫完成 API 後的回報內容
-                            String strResult = await response.Content.ReadAsStringAsync();
-
-                            switch (response.StatusCode)
+                            if (response.IsSuccessStatusCode == true)
                             {
-                                case HttpStatusCode.OK:
-                                    #region 狀態碼為 OK
-                                    fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                    #endregion
-                                    break;
-
-                                default:
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = false,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = null,
-                                    };
-                                    break;
+                                // 取得呼叫完成 API 後的回報內容
+                                String strResult = await response.Content.ReadAsStringAsync();
+                                fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            }
+                            else
+                            {
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = false,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                    Payload = null,
+                                };
                             }
                         }
                         else

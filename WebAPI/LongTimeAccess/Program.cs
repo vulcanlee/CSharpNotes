@@ -15,7 +15,8 @@ namespace LongTimeAccess
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"使用 Get 方法呼叫 Web API ，並且會逾期的結果");
+            Console.WriteLine("遠端 Web API 需要花費 5 秒鐘，才會回傳結果內容");
+            Console.WriteLine($"使用 Get 方法呼叫 Web API ，並且會逾期的結果 ( HttpClient 限時 4 秒內要完成 )");
             var foo = JsonPutAsync(4).Result;
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -31,7 +32,7 @@ namespace LongTimeAccess
             Console.WriteLine($"Press any key to Continue...{Environment.NewLine}");
             Console.ReadKey();
 
-            Console.WriteLine($"使用 Get 方法呼叫 Web API ，並且不會逾期的結果");
+            Console.WriteLine($"使用 Get 方法呼叫 Web API ，並且不會逾期的結果 ( HttpClient 限時 6 秒內要完成 )");
             foo = JsonPutAsync(6).Result;
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -66,8 +67,13 @@ namespace LongTimeAccess
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}/LongTimeGet";
+
+                        // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
                         //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        // Content-Type 用於宣告遞送給對方的文件型態
+                        //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         response = await client.GetAsync(fooFullUrl);
                         #endregion
@@ -76,25 +82,20 @@ namespace LongTimeAccess
                         #region 處理呼叫完成 Web API 之後的回報結果
                         if (response != null)
                         {
-                            // 取得呼叫完成 API 後的回報內容
-                            String strResult = await response.Content.ReadAsStringAsync();
-
-                            switch (response.StatusCode)
+                            if (response.IsSuccessStatusCode == true)
                             {
-                                case HttpStatusCode.OK:
-                                    #region 狀態碼為 OK
-                                    fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                    #endregion
-                                    break;
-
-                                default:
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = false,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = null,
-                                    };
-                                    break;
+                                // 取得呼叫完成 API 後的回報內容
+                                String strResult = await response.Content.ReadAsStringAsync();
+                                fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            }
+                            else
+                            {
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = false,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                    Payload = null,
+                                };
                             }
                         }
                         else

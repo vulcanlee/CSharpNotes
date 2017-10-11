@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,11 +48,17 @@ namespace UploadFile
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Upload";
                         HttpResponseMessage response = null;
 
-                        client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}";
-                        client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
+
+                        // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
+                        //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+
+                        // Content-Type 用於宣告遞送給對方的文件型態
+                        //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         #region 將剛剛拍照的檔案，上傳到網路伺服器上(使用 Multipart 的規範)
                         // 規格說明請參考 https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
@@ -81,25 +88,20 @@ namespace UploadFile
                         #region 處理呼叫完成 Web API 之後的回報結果
                         if (response != null)
                         {
-                            // 取得呼叫完成 API 後的回報內容
-                            String strResult = await response.Content.ReadAsStringAsync();
-
-                            switch (response.StatusCode)
+                            if (response.IsSuccessStatusCode == true)
                             {
-                                case HttpStatusCode.OK:
-                                    #region 狀態碼為 OK
-                                    fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                    #endregion
-                                    break;
-
-                                default:
-                                    fooAPIResult = new APIResult
-                                    {
-                                        Success = false,
-                                        Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content),
-                                        Payload = null,
-                                    };
-                                    break;
+                                // 取得呼叫完成 API 後的回報內容
+                                String strResult = await response.Content.ReadAsStringAsync();
+                                fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            }
+                            else
+                            {
+                                fooAPIResult = new APIResult
+                                {
+                                    Success = false,
+                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                    Payload = null,
+                                };
                             }
                         }
                         else
