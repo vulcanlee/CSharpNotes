@@ -42,10 +42,10 @@ namespace VulcanWebAPI.Controllers
 
         // http://vulcanwebapi.azurewebsites.net/api/values/QueryStringGet?id=777
         [HttpGet("QueryStringGet")]
-        public APIResult QueryStringGet(int id)
+        public APIResult QueryStringGet([FromQuery] APIData value)
         {
             APIResult foo;
-            if (id == 777)
+            if (value.Id == 777)
             {
                 foo = new APIResult()
                 {
@@ -54,7 +54,7 @@ namespace VulcanWebAPI.Controllers
                     Payload = new APIData()
                     {
                         Id = 777,
-                        Name = "Vulcan01"
+                        Name = "Vulcan by QueryStringGet"
                     }
                 };
             }
