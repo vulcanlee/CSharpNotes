@@ -15,7 +15,7 @@ namespace GetMethod
     {
         static void Main(string[] args)
         {
-            var foo = JsonPutAsync().Result;
+            var foo = JsonGetAsync().Result;
             Console.WriteLine($"使用 Get 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -33,7 +33,7 @@ namespace GetMethod
 
         }
 
-        private static async Task<APIResult> JsonPutAsync()
+        private static async Task<APIResult> JsonGetAsync()
         {
             APIResult fooAPIResult;
             using (HttpClientHandler handler = new HttpClientHandler())
