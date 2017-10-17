@@ -13,9 +13,9 @@ namespace GetMethod
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var foo = HttpGetAsync().Result;
+            var foo = await HttpGetAsync();
             Console.WriteLine($"使用 Get 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -43,7 +43,6 @@ namespace GetMethod
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values";
                         HttpResponseMessage response = null;
 
