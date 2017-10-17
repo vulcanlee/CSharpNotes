@@ -71,6 +71,7 @@ namespace JsonPost
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         var fooJSON = JsonConvert.SerializeObject(apiData);
+                        // https://msdn.microsoft.com/zh-tw/library/system.net.http.stringcontent(v=vs.110).aspx
                         using (var fooContent = new StringContent(fooJSON, Encoding.UTF8, "application/json"))
                         {
                             response = await client.PostAsync(fooFullUrl, fooContent);

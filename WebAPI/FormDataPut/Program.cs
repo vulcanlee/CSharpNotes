@@ -9,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FormDataPut
+namespace FormDataPost
 {
     class Program
     {
@@ -89,6 +89,8 @@ namespace FormDataPut
                             {nameof(APIData.Name), apiData.Name },
                             {nameof(APIData.Filename), apiData.Filename }
                         };
+
+                        // https://msdn.microsoft.com/zh-tw/library/system.net.http.formurlencodedcontent(v=vs.110).aspx
                         var formData = new FormUrlEncodedContent(formDataDictionary);
                         #endregion
 

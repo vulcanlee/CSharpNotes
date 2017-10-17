@@ -83,6 +83,7 @@ namespace MultiPartPost
                             {nameof(APIData.Filename), apiData.Filename }
                         };
 
+                        // https://msdn.microsoft.com/zh-tw/library/system.net.http.multipartformdatacontent(v=vs.110).aspx
                         using (var content = new MultipartFormDataContent())
                         {
                             foreach (var keyValuePair in formDataDictionary)
