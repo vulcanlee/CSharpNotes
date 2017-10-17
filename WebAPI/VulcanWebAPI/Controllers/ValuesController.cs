@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using VulcanWebAPI.Filters;
 
 namespace VulcanWebAPI.Controllers
 {
@@ -67,6 +68,15 @@ namespace VulcanWebAPI.Controllers
                     Payload = null
                 };
             }
+            return foo;
+        }
+
+        [HttpGet("GetException")]
+        [CustomExceptionFilter]
+        public APIResult GetException()
+        {
+            APIResult foo = new APIResult();
+            throw new Exception("喔喔,我發生錯誤了");
             return foo;
         }
 

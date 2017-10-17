@@ -3,29 +3,22 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GetMethod
+namespace GetException
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var foo = HttpGetAsync().Result;
+            var foo = await GetException();
             Console.WriteLine($"使用 Get 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
-            var fooAPIData = JsonConvert.DeserializeObject<List<APIData>>(foo.Payload.ToString());
-            foreach (var item in fooAPIData)
-            {
-                Console.WriteLine($"Id : {item.Id}");
-                Console.WriteLine($"Name : {item.Name}");
-                Console.WriteLine($"Filename : {item.Filename}");
-            }
+            Console.WriteLine($"其他訊息 : {foo.Payload}");
             Console.WriteLine($"");
 
             Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
@@ -33,7 +26,7 @@ namespace GetMethod
 
         }
 
-        private static async Task<APIResult> HttpGetAsync()
+        private static async Task<APIResult> GetException()
         {
             APIResult fooAPIResult;
             using (HttpClientHandler handler = new HttpClientHandler())
@@ -44,7 +37,7 @@ namespace GetMethod
                     {
                         #region 呼叫遠端 Web API
                         //string FooUrl = $"http://localhost:53494/api/Upload";
-                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values";
+                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values/GetException";
                         HttpResponseMessage response = null;
 
                         #region  設定相關網址內容
@@ -72,12 +65,15 @@ namespace GetMethod
                             }
                             else
                             {
-                                fooAPIResult = new APIResult
-                                {
-                                    Success = false,
-                                    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
-                                    Payload = null,
-                                };
+                                // 這裡將會取得這次例外異常的錯誤資訊
+                                String strResult = await response.Content.ReadAsStringAsync();
+                                fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                                //fooAPIResult = new APIResult
+                                //{
+                                //    Success = false,
+                                //    Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
+                                //    Payload = null,
+                                //};
                             }
                         }
                         else
