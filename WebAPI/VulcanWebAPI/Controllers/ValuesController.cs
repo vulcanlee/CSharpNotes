@@ -41,7 +41,6 @@ namespace VulcanWebAPI.Controllers
             return foo;
         }
 
-        // http://vulcanwebapi.azurewebsites.net/api/values/QueryStringGet?id=777
         [HttpGet("QueryStringGet")]
         public APIResult QueryStringGet([FromQuery] APIData value)
         {

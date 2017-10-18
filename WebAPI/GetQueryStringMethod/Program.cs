@@ -12,7 +12,7 @@ namespace GetQueryStringMethod
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var fooAPIData = new APIData()
             {
@@ -20,7 +20,7 @@ namespace GetQueryStringMethod
                 Name = "Vulcan",
                 Filename = "",
             };
-            var foo = GetQueryStringAsync(fooAPIData).Result;
+            var foo = await GetQueryStringAsync(fooAPIData);
             Console.WriteLine($"使用 Get 與 QueryString 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -36,7 +36,7 @@ namespace GetQueryStringMethod
                 Name = "Vulcan",
                 Filename = "",
             };
-            foo = GetQueryStringAsync(fooAPIData).Result;
+            foo = await GetQueryStringAsync(fooAPIData);
             Console.WriteLine($"使用 Get 與 QueryString 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -57,7 +57,6 @@ namespace GetQueryStringMethod
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values/QueryStringGet";
                         HttpResponseMessage response = null;
 
@@ -65,10 +64,12 @@ namespace GetQueryStringMethod
                         var fooFullUrl = $"{FooUrl}";
 
                         // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
+                        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept
                         //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                         // Content-Type 用於宣告遞送給對方的文件型態
+                        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         #region 組合 QueryString

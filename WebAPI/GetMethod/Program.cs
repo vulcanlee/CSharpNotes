@@ -50,10 +50,12 @@ namespace GetMethod
                         var fooFullUrl = $"{FooUrl}";
 
                         // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
+                        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept
                         //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                         // Content-Type 用於宣告遞送給對方的文件型態
+                        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
                         response = await client.GetAsync(fooFullUrl);
@@ -65,6 +67,9 @@ namespace GetMethod
                         {
                             if (response.IsSuccessStatusCode == true)
                             {
+                                // 取得回傳結果的 Content-Type 內容
+                                var fooCT = response.Content.Headers.FirstOrDefault(x => x.Key == "Content-Type").Value.FirstOrDefault();
+                                
                                 // 取得呼叫完成 API 後的回報內容
                                 String strResult = await response.Content.ReadAsStringAsync();
                                 fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
