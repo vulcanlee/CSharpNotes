@@ -13,7 +13,7 @@ namespace MultiPartPost
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var fooAPIData = new APIData()
             {
@@ -21,7 +21,7 @@ namespace MultiPartPost
                 Name = "VulcanSource",
                 Filename = "",
             };
-            var foo = FormDataPostAsync(fooAPIData).Result;
+            var foo = await FormDataPostAsync(fooAPIData);
             Console.WriteLine($"使用 multipart/form-data MIME 類型編碼 格式與使用 Post 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -37,7 +37,7 @@ namespace MultiPartPost
                 Name = "VulcanSource",
                 Filename = "",
             };
-            foo = FormDataPostAsync(fooAPIData).Result;
+            foo = await FormDataPostAsync(fooAPIData);
             Console.WriteLine($"使用 multipart/form-data MIME 類型編碼 格式與使用 Post 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
