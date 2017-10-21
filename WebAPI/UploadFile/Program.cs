@@ -55,7 +55,6 @@ namespace UploadFile
                         // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
                         //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
 
                         // Content-Type 用於宣告遞送給對方的文件型態
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");

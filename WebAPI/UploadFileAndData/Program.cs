@@ -2,53 +2,39 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FormDataPost
+namespace UploadFileAndData
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var fooAPIData = new APIData()
+            var fooLoginInformation = new LoginInformation()
             {
-                Id = 777,
-                Name = "VulcanSource",
-                Filename = "",
+                Account = "Vulcan",
+                Password = "123",
+                VerifyCode = "abc"
             };
-            var foo = FormDataPostAsync(fooAPIData).Result;
-            Console.WriteLine($"使用 form-urlencoded 格式與使用 Post 方法呼叫 Web API 的結果");
+            var foo = await UploadImageAsync("Readme.txt", fooLoginInformation);
+            fooLoginInformation = JsonConvert.DeserializeObject<LoginInformation>(foo.Payload.ToString());
+            Console.WriteLine($"使用 MultiPart/Form-Data 格式傳送文字檔案與資料、使用 Post 方法呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
             Console.WriteLine($"Payload : {foo.Payload}");
-            Console.WriteLine($"");
-
-            Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
-            Console.ReadKey();
-
-            fooAPIData = new APIData()
-            {
-                Id = 123,
-                Name = "VulcanSource",
-                Filename = "",
-            };
-            foo = FormDataPostAsync(fooAPIData).Result;
-            Console.WriteLine($"使用 form-urlencoded 格式與使用 Post 方法呼叫 Web API 的結果");
-            Console.WriteLine($"結果狀態 : {foo.Success}");
-            Console.WriteLine($"結果訊息 : {foo.Message}");
-            Console.WriteLine($"Payload : {foo.Payload}");
-            Console.WriteLine($"");
-
+            Console.WriteLine($"Account : {fooLoginInformation.Account}");
+            Console.WriteLine($"Password : {fooLoginInformation.Password}");
+            Console.WriteLine($"文字檔案內容 : {fooLoginInformation.VerifyCode}");
             Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
             Console.ReadKey();
         }
 
-        private static async Task<APIResult> FormDataPostAsync(APIData apiData)
+        public static async Task<APIResult> UploadImageAsync(string filename, LoginInformation loginInformation)
         {
             APIResult fooAPIResult;
             using (HttpClientHandler handler = new HttpClientHandler())
@@ -58,8 +44,10 @@ namespace FormDataPost
                     try
                     {
                         #region 呼叫遠端 Web API
-                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values/FormUrlencodedPost";
+                        //string FooUrl = $"http://localhost:53495/api/Upload/FileAndData";
+                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Upload/FileAndData";
                         HttpResponseMessage response = null;
+
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}";
@@ -71,29 +59,40 @@ namespace FormDataPost
                         // Content-Type 用於宣告遞送給對方的文件型態
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
-
-                        #region 使用 FormUrlEncodedContent 產生要 Post 的資料
-                        //// 方法一： 使用字串名稱用法
-                        //var formData = new FormUrlEncodedContent(new[] {
-                        //    new KeyValuePair<string, string>("Id", apiData.Id.ToString()),
-                        //    new KeyValuePair<string, string>("Name", apiData.Name),
-                        //    new KeyValuePair<string, string>("Filename", apiData.Filename)
-                        //});
-
-                        // 方法二： 強型別用法
-                        // https://docs.microsoft.com/zh-tw/dotnet/csharp/language-reference/keywords/nameof
-                        Dictionary<string, string> formDataDictionary = new Dictionary<string, string>()
+                        #region 將剛剛拍照的檔案，上傳到網路伺服器上(使用 Multipart 的規範)
+                        // 規格說明請參考 https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
+                        using (var content = new MultipartFormDataContent())
                         {
-                            {nameof(APIData.Id), apiData.Id.ToString() },
-                            {nameof(APIData.Name), apiData.Name },
-                            {nameof(APIData.Filename), apiData.Filename }
-                        };
 
-                        // https://msdn.microsoft.com/zh-tw/library/system.net.http.formurlencodedcontent(v=vs.110).aspx
-                        var formData = new FormUrlEncodedContent(formDataDictionary);
+                            Dictionary<string, string> formDataDictionary = new Dictionary<string, string>()
+                            {
+                                { nameof(loginInformation.Account), loginInformation.Account },
+                                { nameof(loginInformation.Password), loginInformation.Password },
+                                { nameof(loginInformation.VerifyCode), loginInformation.VerifyCode }
+                            };
+
+                            foreach (var keyValuePair in formDataDictionary)
+                            {
+                                content.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
+                            }
+
+                            var rootPath = Directory.GetCurrentDirectory();
+                            // 取得這個圖片檔案的完整路徑
+                            var path = Path.Combine(rootPath, filename);
+
+                            // 開啟這個圖片檔案，並且讀取其內容
+                            using (var fs = File.Open(path, FileMode.Open))
+                            {
+                                var fooSt = $"My{filename}";
+                                var streamContent = new StreamContent(fs);
+                                streamContent.Headers.Add("Content-Type", "text/plain");
+                                streamContent.Headers.Add("Content-Disposition", "form-data; name=\"files\"; filename=\"" + fooSt + "\"");
+                                content.Add(streamContent, "file", filename);
+                                // 上傳到遠端伺服器上
+                                response = await client.PostAsync(fooFullUrl, content);
+                            }
+                        }
                         #endregion
-
-                        response = await client.PostAsync(fooFullUrl, formData);
                         #endregion
                         #endregion
 

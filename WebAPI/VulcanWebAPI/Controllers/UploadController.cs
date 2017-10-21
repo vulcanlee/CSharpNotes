@@ -66,5 +66,51 @@ namespace VulcanWebAPI.Controllers
 
             return fooAPIResult;
         }
+
+
+        [HttpPost("FileAndData")]
+        public async Task<APIResult> FileAndData(List<IFormFile> files, LoginInformation loginInformation)
+        {
+            // https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads
+
+            string webDatasRoot = Path.Combine(_HostingEnvironment.WebRootPath, "Datas");
+
+            long size = files.Sum(f => f.Length);
+
+            // full path to file in temp location
+            if (files.Count > 0)
+            {
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await formFile.CopyToAsync(memoryStream);
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            var streamReader = new StreamReader(memoryStream);
+                            var fooContent = streamReader.ReadToEnd();
+
+                            fooAPIResult.Success = true;
+                            fooAPIResult.Message = "檔案上傳成功";
+                            fooAPIResult.Payload = new LoginInformation
+                            {
+                                Account = $">> {loginInformation.Account}",
+                                Password = $">> {loginInformation.Account}",
+                                VerifyCode = fooContent
+                            };
+                        }
+                    }
+                }
+            }
+            else
+            {
+                fooAPIResult.Success = false;
+                fooAPIResult.Message = "沒有任何檔案上傳";
+                fooAPIResult.Payload = null;
+            }
+
+            return fooAPIResult;
+        }
     }
 }

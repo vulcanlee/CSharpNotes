@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VulcanWebAPI", "VulcanWebAPI\VulcanWebAPI.csproj", "{D4CF33BB-0520-4041-AEF6-212213DCA61C}"
 EndProject
@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "08.JsonPut", "JsonPut\08.Js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05.FormDataPost", "FormDataPut\05.FormDataPost.csproj", "{B694C1E4-F93E-459F-B7A5-410FFACF3167}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06,MultiPartPost", "MultiPartPost\06,MultiPartPost.csproj", "{A583964A-1CD1-4F4B-86FE-22B9729B9770}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06.MultiPartPost", "MultiPartPost\06.MultiPartPost.csproj", "{A583964A-1CD1-4F4B-86FE-22B9729B9770}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10PostHeader", "PostHeader\10PostHeader.csproj", "{BC999D1E-412F-4C6A-A96E-C416F7F974DB}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02.BadUrl", "BadUrl\02.BadUrl.csproj", "{13578B38-A25E-4CF1-938A-D1BEBC85E78A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16GetException", "GetException\16GetException.csproj", "{A07B62F2-B678-4BC0-92B8-66F2CC4BAA0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "13UploadFileAndData", "UploadFileAndData\13UploadFileAndData.csproj", "{355E80FA-699E-493B-B415-EF293CFE1EC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{A07B62F2-B678-4BC0-92B8-66F2CC4BAA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A07B62F2-B678-4BC0-92B8-66F2CC4BAA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A07B62F2-B678-4BC0-92B8-66F2CC4BAA0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
