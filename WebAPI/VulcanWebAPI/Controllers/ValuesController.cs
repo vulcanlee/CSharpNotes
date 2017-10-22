@@ -71,8 +71,16 @@ namespace VulcanWebAPI.Controllers
         }
 
         [HttpGet("GetException")]
-        [CustomExceptionFilter]
         public APIResult GetException()
+        {
+            APIResult foo = new APIResult();
+            throw new Exception("喔喔,我發生錯誤了");
+            return foo;
+        }
+
+        [HttpGet("GetExceptionFilter")]
+        [CustomExceptionFilter]
+        public APIResult GetExceptionFilter()
         {
             APIResult foo = new APIResult();
             throw new Exception("喔喔,我發生錯誤了");

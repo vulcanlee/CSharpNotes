@@ -59,7 +59,6 @@ namespace MultiPartPost
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values/FormUrlencodedPost";
                         HttpResponseMessage response = null;
 

@@ -56,8 +56,7 @@ namespace JsonPost
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
-                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values";
+                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values"; 
                         HttpResponseMessage response = null;
 
                         #region  設定相關網址內容
