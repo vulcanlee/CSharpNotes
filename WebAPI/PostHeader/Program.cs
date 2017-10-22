@@ -92,7 +92,6 @@ namespace PostHeader
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53495/api/values/HeaderPost";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values/HeaderPost";
                         HttpResponseMessage response = null;
 

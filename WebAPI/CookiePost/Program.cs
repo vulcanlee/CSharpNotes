@@ -19,9 +19,9 @@ namespace CookiePost
         //static public string RemoteLoginUrl = $"http://localhost:53495/api/Values/Login";
         //static public string RemoteLoginCheckUrl = $"http://localhost:53495/api/Values/LoginCheck";
         static public string RemoteLoginUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values/Login";
-        static public string RemoteLoginCheckUrl = $"http://vulcanwebapi.azurewebsites.net/api/My/LoginCheck";
+        static public string RemoteLoginCheckUrl = $"http://vulcanwebapi.azurewebsites.net/api/Values/LoginCheck";
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string ResponseCookie = "";
             var fooLoginInformation = new LoginInformation()
@@ -29,7 +29,7 @@ namespace CookiePost
                 Account = "Vulcan",
                 Password = "123",
             };
-            var foo = LoginPostAsync(fooLoginInformation).Result;
+            var foo = await LoginPostAsync(fooLoginInformation);
             ResponseCookie = foo.Payload.ToString();
             Console.WriteLine($"使用 Post 方法，取得 Cookie，呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
@@ -46,7 +46,7 @@ namespace CookiePost
                 Password = "13",
                 VerifyCode = "123"
             };
-            foo = LoginPostAsync(fooLoginInformation).Result;
+            foo = await LoginPostAsync(fooLoginInformation);
             Console.WriteLine($"使用 Post 方法，取得 Cookie，呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -56,7 +56,7 @@ namespace CookiePost
             Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
             Console.ReadKey();
 
-            foo = LoginCheckGetAsync(ResponseCookie).Result;
+            foo = await LoginCheckGetAsync(ResponseCookie);
             Console.WriteLine($"使用 Get 方法，傳送 Cookie，呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -66,7 +66,7 @@ namespace CookiePost
             Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
             Console.ReadKey();
 
-            foo = LoginCheckGetAsync(null).Result;
+            foo = await LoginCheckGetAsync(null);
             Console.WriteLine($"使用 Get 方法，沒有傳送 Cookie，呼叫 Web API 的結果");
             Console.WriteLine($"結果狀態 : {foo.Success}");
             Console.WriteLine($"結果訊息 : {foo.Message}");
@@ -178,6 +178,9 @@ namespace CookiePost
                 {
                     try
                     {
+                        ////請試著將底下敘述解除註解，並且執行看看，會發生甚麼事情？
+                        //handler.AllowAutoRedirect = false;
+
                         #region 呼叫遠端 Web API
                         string FooUrl = RemoteLoginCheckUrl;
                         HttpResponseMessage response = null;
@@ -195,8 +198,9 @@ namespace CookiePost
                         if (string.IsNullOrEmpty(responseCookie) == false)
                         {
                             var baseAddress = BaseAddress;
-                            var cookieContainer = handler.CookieContainer;
-                            cookieContainer.Add(baseAddress, new Cookie(CookieName, responseCookie));
+                            //var cookieContainer = handler.CookieContainer;
+                            //cookieContainer.Add(baseAddress, new Cookie(CookieName, responseCookie));
+                            handler.CookieContainer.Add(baseAddress, new Cookie(CookieName, responseCookie));
                         }
 
                         response = await client.GetAsync(fooFullUrl);
