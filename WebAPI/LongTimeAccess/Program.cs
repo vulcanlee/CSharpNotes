@@ -61,12 +61,11 @@ namespace LongTimeAccess
                     {
                         client.Timeout = TimeSpan.FromSeconds(sec);
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
-                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values";
+                        string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/values/LongTimeGet";
                         HttpResponseMessage response = null;
 
                         #region  設定相關網址內容
-                        var fooFullUrl = $"{FooUrl}/LongTimeGet";
+                        var fooFullUrl = $"{FooUrl}";
 
                         // Accept 用於宣告客戶端要求服務端回應的文件型態 (底下兩種方法皆可任選其一來使用)
                         //client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");

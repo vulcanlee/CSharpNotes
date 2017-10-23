@@ -49,7 +49,7 @@ namespace DownloadProgress
             }
             else
             {
-                Console.WriteLine($"使用者中斷下載作業 {fooResult.Message} {Environment.NewLine}"); 
+                Console.WriteLine($"使用者中斷下載作業 {fooResult.Message} {Environment.NewLine}");
                 Console.WriteLine($"Press any key to Exist...{Environment.NewLine}");
                 Console.ReadKey();
             }
@@ -73,15 +73,13 @@ namespace DownloadProgress
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/Datas/";
                         HttpResponseMessage response = null;
 
                         #region  設定相關網址內容
                         var fooFullUrl = $"{FooUrl}{filename}";
 
-                        response = await client.GetAsync(fooFullUrl, 
-                            HttpCompletionOption.ResponseHeadersRead);
+                        response = await client.GetAsync(fooFullUrl, HttpCompletionOption.ResponseHeadersRead);
                         #endregion
                         #endregion
 
