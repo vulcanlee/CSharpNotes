@@ -44,7 +44,6 @@ namespace UploadFile
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53494/api/Upload";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Upload";
                         HttpResponseMessage response = null;
 
@@ -59,7 +58,7 @@ namespace UploadFile
                         // Content-Type 用於宣告遞送給對方的文件型態
                         //client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
 
-                        #region 將剛剛拍照的檔案，上傳到網路伺服器上(使用 Multipart 的規範)
+                        #region 將檔案上傳到網路伺服器上(使用 Multipart 的規範)
                         // 規格說明請參考 https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
                         using (var content = new MultipartFormDataContent())
                         {

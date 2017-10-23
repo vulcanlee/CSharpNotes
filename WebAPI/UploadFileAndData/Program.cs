@@ -44,7 +44,6 @@ namespace UploadFileAndData
                     try
                     {
                         #region 呼叫遠端 Web API
-                        //string FooUrl = $"http://localhost:53495/api/Upload/FileAndData";
                         string FooUrl = $"http://vulcanwebapi.azurewebsites.net/api/Upload/FileAndData";
                         HttpResponseMessage response = null;
 
