@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16GetException", "GetExcept
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "13UploadFileAndData", "UploadFileAndData\13UploadFileAndData.csproj", "{355E80FA-699E-493B-B415-EF293CFE1EC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "17MsgHandler", "MsgHandler\17MsgHandler.csproj", "{83529284-FAEF-4C80-B838-B8E7D16A80AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{355E80FA-699E-493B-B415-EF293CFE1EC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83529284-FAEF-4C80-B838-B8E7D16A80AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83529284-FAEF-4C80-B838-B8E7D16A80AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83529284-FAEF-4C80-B838-B8E7D16A80AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83529284-FAEF-4C80-B838-B8E7D16A80AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

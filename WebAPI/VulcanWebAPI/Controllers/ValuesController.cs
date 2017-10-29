@@ -378,5 +378,49 @@ namespace VulcanWebAPI.Controllers
             return foo;
         }
 
+        [HttpGet("CustHandler")]
+        public APIResult CustHandler()
+        {
+            APIResult foo;
+            StringValues VerifyCode = "";
+
+            this.HttpContext.Request.Headers.TryGetValue("APIKey", out VerifyCode);
+            if (StringValues.IsNullOrEmpty(VerifyCode))
+            {
+                foo = new APIResult()
+                {
+                    Success = false,
+                    Message = "API 金鑰 沒有發現",
+                    Payload = null
+                };
+                Request.HttpContext.Response.Headers.Add("APIKeyEcho", "No API Key");
+            }
+            else
+            {
+                if (VerifyCode != "123")
+                {
+                    foo = new APIResult()
+                    {
+                        Success = false,
+                        Message = "API 金鑰 不正確",
+                        Payload = null
+                    };
+                    Response.Headers.Add("APIKeyEcho", "API Key is incorrect");
+                }
+                else
+                {
+                    foo = new APIResult()
+                    {
+                        Success = true,
+                        Message = "API 金鑰 正確無誤",
+                        Payload = null
+                    };
+                    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(VerifyCode);
+                    string echo = Convert.ToBase64String(bytes);
+                    Request.HttpContext.Response.Headers.Add("APIKeyEcho", echo);
+                }
+            }
+            return foo;
+        }
     }
 }
