@@ -68,7 +68,7 @@ namespace ProgressHandler
         {
             APIResult fooAPIResult;
             using (HttpClientHandler handler = new HttpClientHandler())
-            {
+            { 
                 // System.Net.Http.Formatting.Extension
                 ProgressMessageHandler progressMessageHandler = new ProgressMessageHandler();
                 progressMessageHandler.InnerHandler = handler;

@@ -29,12 +29,14 @@ namespace VulcanWebAPI.Controllers
                     new APIData()
                     {
                         Id =777,
-                        Name = "Vulcan01"
+                        Name = "Vulcan01",
+                        Filename = DateTime.Now.ToString()
                     },
                     new APIData()
                     {
                         Id =234,
-                        Name ="Vulcan02"
+                        Name ="Vulcan02",
+                        Filename = DateTime.Now.ToString()
                     }
                 }
             };
